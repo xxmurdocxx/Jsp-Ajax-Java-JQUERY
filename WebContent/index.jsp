@@ -5,7 +5,7 @@
 
 <head>
 <title>JSP AJAX JAVA JS</title>
-<script src="js/jquery-2.2.0.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
 <script src="js/basic.js"></script>
 <link rel="stylesheet" href="css/basic.css" type="text/css" media="screen"/>
 </head>

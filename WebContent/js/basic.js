@@ -14,8 +14,8 @@ $(document).ready(function(){
 					// Кажется, ошибка здесь! Не пойму в чем дело!
 					// Показывает имя под полем ввода, висит меньше 1с и тут же исчезает.
 					// Может дело в версии JQuery?
-					$("#displayName").html("Your name is: " + data.username).delay(10000).fadeOut();
-					$("#displayName").slideDown(500);
+					$("#displayName").html("Your name is: " + data.username);
+					
 //					var usrName = data.username;
 //					var node = document.getElementById("displayName");
 //					node.innerHTML = usrName; 
