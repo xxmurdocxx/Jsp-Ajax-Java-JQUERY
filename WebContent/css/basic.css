@@ -11,3 +11,6 @@ p.large {
 p.small {
 	font-size: 15px;
 }
+displayName {
+	display: none;
+}

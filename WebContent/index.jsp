@@ -19,7 +19,6 @@
 	</form>
 	<p id="displayName"/>
 	<p class="small">Tutorial Resource: </p>
-	
 	</body>	
 		
 </html>
