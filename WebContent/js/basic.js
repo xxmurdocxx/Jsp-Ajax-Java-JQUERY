@@ -10,8 +10,16 @@ $(document).ready(function(){
 			dataType: 'json' ,
 			data: $('#updateUsername').serialize(),
 			success: function(data){
-				if(data.valid){
-					$('displayName').html("Your name is: " + data.username);
+				if(data.isValid){
+					// Кажется, ошибка здесь! Не пойму в чем дело!
+					// Показывает имя под полем ввода, висит меньше 1с и тут же исчезает.
+					// Может дело в версии JQuery?
+					$("#displayName").html("Your name is: " + data.username).delay(10000).fadeOut();
+					$("#displayName").slideDown(500);
+//					var usrName = data.username;
+//					var node = document.getElementById("displayName");
+//					node.innerHTML = usrName; 
+//					
 				}
 				else{
 					alert("Please enter a valid name!");

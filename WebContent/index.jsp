@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html">
+<!DOCTYPE html>
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>JSP AJAX JAVA JS</title>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/basic.js"></script>
@@ -18,6 +17,7 @@
 		<input type="text" id="username" name="username"/>
 		<input type="submit"/>
 	</form>
+	<p id="displayName"/>
 	<p class="small">Tutorial Resource: </p>
 	
 	</body>	
