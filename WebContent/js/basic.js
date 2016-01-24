@@ -12,9 +12,11 @@ $(document).ready(function(){
 			data: $('#updateDilemma').serialize(),
 			success: function(data){
 
-					$("#displayDilemma").html("Но: " + data.but);
-					$('#votedYes').html("Проголосовали ДА: " + data.rateGoodBad*100 + "%");
-					$('#votedNo').html("Проголосовали НЕТ: " + (1 - data.rateGoodBad)*100 + "%");
+					$("#youGet").html("Ты получаешь: " + data.youGet);
+					$("#but").html("Но: " + data.but);
+					$('#votedYes').html("Проголосовали ДА: " + data.peopleYes);
+					$('#votedNo').html("Проголосовали НЕТ: " + data.peopleNo);
+					$('#id1').html("id: " + data.id1);
 			}
 		});
 	});
