@@ -2,6 +2,11 @@
  * 
  */
 
+
+function initId(id){
+	document.getElementById("id").value = id;
+}
+
 $(document).ready(function(){
 	$('#updateDilemma').submit(function(event){
 		event.preventDefault();
@@ -11,7 +16,7 @@ $(document).ready(function(){
 			dataType: 'json' ,
 			data: $('#updateDilemma').serialize(),
 			success: function(data){
-
+					initId(data.id1);
 					$("#youGet").html(data.youGet);
 					$("#but").html("Но: " + data.but);
 					var yes = parseInt(data.peopleYes);

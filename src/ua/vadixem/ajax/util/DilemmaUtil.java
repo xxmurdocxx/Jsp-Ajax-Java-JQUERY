@@ -128,14 +128,21 @@ public class DilemmaUtil {
 		// Select all documents in collection and get a cursor to the selected documents.
 		Cursor cursor = coll.find();
 		boolean dilemmaFound;
+
+		
 		// Find and return element whose id is not in answeredDilemArray.
 		DBObject ob;
 		while(cursor.hasNext()){
 			dilemmaFound = false;
 			ob = cursor.next();
 			String id = DilemmaUtil.getId((BasicDBObject)ob);
+			int i = 0;
 			for(String str : answeredDilemArray){
-				if(str.equals(id)){ 
+				if(str == null){
+					System.out.println("Null element in answeredDilemArray found!====");
+					break;
+				}
+				if(id != null && str.equals(id)){ 
 					dilemmaFound = true;
 					break;
 				}
@@ -146,6 +153,15 @@ public class DilemmaUtil {
 		}
 		System.out.println("All answers have been given!=====");
 		return null;
+	}
+	/**
+	 * Used when this is the very first request
+	 * @param coll
+	 * @return
+	 */
+	public static BasicDBObject getNewDilemmaExcludingAnswered(DBCollection coll){
+		System.out.println("Inside getNewDilemmaExcludingAnswered(DBCollection coll) method!==========");
+		return (BasicDBObject)coll.findOne();
 	}
 	
 	public static void main(String[] args) {

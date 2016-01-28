@@ -15,7 +15,7 @@ pageEncoding="UTF-8"%>
 	<p class="Large">Введите id дилеммы</p>
 	<form id="updateDilemma">
 		<label for="id">ID: </label>
-		<input type="text" id="id" size="40" name="id"/>
+		<input type="text" id="id" size="40" name="id" readonly/>
 		<input type="checkbox" id="getNewDilemma" name="getNewDilemma">Показать новую дилемму? 
 		<input type="submit"/>
 	</form>

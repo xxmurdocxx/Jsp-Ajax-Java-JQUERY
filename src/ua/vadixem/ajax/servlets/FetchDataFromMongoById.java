@@ -2,6 +2,7 @@ package ua.vadixem.ajax.servlets;
 
 
 import java.io.IOException;
+import java.security.IdentityScope;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,83 +51,71 @@ public class FetchDataFromMongoById extends HttpServlet {
 //		HttpSession session = request.getSession(false);
 //		// Gets id of dilemma.
 		String pro = request.getParameter("id");
-		boolean showNew = request.getParameter("getNewDilemma") == null ? false : true;
-		System.out.println("ShowNew: " + showNew);
-		// ****  Cookies sector  ****
-		//		Cookie [] cookies = request.getCookies();
-//		String [] answeredDilamArr;
-//		// If no cookies yet then add a new cookie with dilemma id to response. 
-//		if(cookies == null){
-//			Cookie cookie = new Cookie("dilemma1", pro);
-//			response.addCookie(cookie);
-//			answeredDilamArr = new String[1];
-//			answeredDilamArr[0] = pro;
-//			System.out.println("Id of incoming dilemma: " + answeredDilamArr[0]);
-//		}
-//		 // If cookies exist then add a new cookie with dilemma 
-//		 // id relying on total cookies count.
-//		else{
-//			// Log all cookies values(to be deleted).
-//			int i = 0;
-//			answeredDilamArr = new String[cookies.length + 1];
-//			System.out.println("Cookies are not empty: ");
-//			for(Cookie c : cookies){
-//				// Add id of answered dilemmas to array.
-//				answeredDilamArr[i] = c.getValue();
-//				System.out.println(c.getValue());
-//		}
-//			// Add last requested dilemma id to array.
-//			answeredDilamArr[answeredDilamArr.length - 1] = pro;
-//			
-//		int cookieIndetifier = cookies.length;
-//		response.addCookie(new Cookie("dilemma" + cookieIndetifier, pro));
-//		}
+		boolean isIdEmpty = pro.isEmpty() ? true : false;
+		System.out.println("isIdEmpty: " + "." +isIdEmpty + ".");
+		System.out.println("Pro: " + "." + pro + ".");
+//		boolean showNew = request.getParameter("getNewDilemma") == null ? false : true;
+//		System.out.println("ShowNew: " + showNew);
+		
+		Cookie [] cookies = request.getCookies();
+		String [] answeredDilemArray;
+		
 
-		
-		
-		//		// There must be two cookies: 1) id of session; 2) answeredDilemArray.
-//		Cookie [] cookies = request.getCookies();
-//		Cookie answeredDilemArrayCookie = null;
-//
-//		for(Cookie c : cookies){
-//			if(c.getName() == "answeredDilemArray")
-//				answeredDilemArrayCookie = c;
-//		}
-//		response.addCookie(answeredDilemArrayCookie);
-//		
-//		// If no session created.
-//		if(session == null){
-//		System.out.println("Create new session!======");
-//		HttpSession newSession = request.getSession();
-//		String answeredDilemArray[] = new String[50];
-//		answeredDilemArray[0] = pro;
-//		newSession.setAttribute("answeredDilemArray", answeredDilemArray);
-//		// If session exists.
-//		} else {
-//			System.out.println("Working with existing session: " + session.getId());
-//			// Getting array of IDs of already answered questions.
-//			String arr[] = (String[])session.getAttribute("answeredDilemArray");
-//			// Get quantity of not null items in array.
-//			int next = DilemmaUtil.getNotNullArrayCount(arr);
-//			// Add new id to answeredDilemArray.
-//			arr[next] = pro;
-//			// Set attrib to session.
-//			session.setAttribute("answeredDilemArray", arr);
-//		}
-		// Get results of dilemma by requested id.
-//		int charArrLength = pro.toCharArray().length;
-//		if(pro.trim().toLowerCase().toCharArray()[charArrLength - 1] == 'o')
-		if(!showNew)
-		write(response, pro);
-//		// Get results of another dilemma that  was not answered yet.
-//		else
-//		System.out.println("Checking answeredDilamArr");
-//		int i = 0;
-//		for(String s : answeredDilamArr){
-//			System.out.println(i++ + " )" + s);
-//		}
-		else
-		writeNotAnswered(response, pro, coll);
+		// If visitor sends empty request(enters for the very first time).
+		if(cookies == null && isIdEmpty){
+
+			System.out.println("There are no cookies yet! Creating one!=======");
+			Cookie answeredCookie = new Cookie("answeredIdCookie_" + pro.hashCode(), pro);
+			response.addCookie(answeredCookie);
+			System.out.println("New cookie " + answeredCookie.getName() + " added!=======");
+			answeredDilemArray = new String[1];
+			answeredDilemArray[0] = pro;
+			System.out.println("Id sent to answeredDilemArray" + answeredDilemArray[0] + " !=======");
+		// If id that is got from request is not empty, then
+		} else if(!isIdEmpty){
+			
+			System.out.println("There were cookies already!======");
+			// Create a larger by 1 array, then we check whether incoming id is unique in order to add or not.
+			int cookiesSize = cookies.length;
+			answeredDilemArray = new String[cookiesSize + 1];
+			boolean cookieWithSameIdfound = false;
+			int i = 0;
+			for(Cookie cookie : cookies){
+				String name = cookie.getName();
+				String value = cookie.getValue();
+				
+				answeredDilemArray[i] = value;
+				System.out.println(i+1 + ") " + " cookie inside loop" + name + " = " + value + "========");
+				i++;
+				if(pro.equals(value)){
+					cookieWithSameIdfound = true;
+					System.out.println("Cookie is not null and with same id found!======");
+				}
+			}
+			// When all cookies looped and checked whether requested(pro) id is unique.
+			if(!cookieWithSameIdfound){
+				
+				System.out.println("This id " + pro + "is unique, adding to response new Cookie!======");
+				Cookie newCookie = new Cookie("answeredIdCookie_" + pro.hashCode(), pro);
+				// Add dilemma id to our array thay will be passed to find elements in db unlike in this array.
+				answeredDilemArray[cookiesSize - 1] = pro;
+				System.out.println("Cookie id added to answeredDilem array: " + answeredDilemArray[cookiesSize - 1]);
+				response.addCookie(newCookie);
+				writeNotAnswered(response, answeredDilemArray, coll);
+				}
+			// Write to the site a new dilemma without adding a new id to the cookies.
+			else {
+				System.out.println("Cookie already exists, don't add it to request!=+===");
+				writeNotAnswered(response, answeredDilemArray, coll);
+			}
+			
+			}
+		else if(isIdEmpty){
+			System.out.println("Requested id is empty!======\nReturning new Dilemma!======");
+			writeNotAnswered(response, coll);
+		}
+	
+	//	writeNotAnswered(response, answeredDilemArray, coll);
 	}
 
 	/**
@@ -162,7 +151,7 @@ public class FetchDataFromMongoById extends HttpServlet {
 	 * @param answeredDilArray
 	 * @throws IOException
 	 */
-	private void writeNotAnswered(HttpServletResponse response, String id, DBCollection coll) throws IOException {
+	private void writeNotAnswered(HttpServletResponse response, String[] ids, DBCollection coll) throws IOException {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		
@@ -170,10 +159,14 @@ public class FetchDataFromMongoById extends HttpServlet {
 		Map<String, String> map = new HashMap<String, String>();
 		Gson gson = new Gson();
 		// Get dilemma which was not yed answered.
-		BasicDBObject doc = DilemmaUtil.getNewDilemmaExcludingAnswered(coll, new String[]{id});
+		BasicDBObject doc = DilemmaUtil.getNewDilemmaExcludingAnswered(coll, ids);
+		System.out.println("Inside of writeNotAnswered(3 args) method!======");
+		System.out.println("Doc is: ." + doc + ".");
+		if(doc != null){
 		System.out.println("ANother dilemma got: " + doc);
 		String id1 = DilemmaUtil.getId(doc);
 		System.out.println(id1);
+		Cookie cookieFromWriteNotAnsweredMethod = new Cookie("answeredIdCookie_" + id1.hashCode(), id1);
 		map.put("id1", id1);
 		map.put("peopleGoodVote", doc.getInt("peopleGoodVote") + "");
 		map.put("peopleBadVote", doc.getInt("peopleBadVote") + "");
@@ -181,8 +174,53 @@ public class FetchDataFromMongoById extends HttpServlet {
 		map.put("peopleNo", doc.getInt("peopleNo") + "");
 		map.put("youGet", doc.getString("youGet"));
 		map.put("but", doc.getString("but"));
-		
+		// Add cookie in order to prevent same dilemmas to be loaded.
+		response.addCookie(cookieFromWriteNotAnsweredMethod);
 		response.getWriter().write(gson.toJson(map));
-
+		}
+		else {
+			map.put("id1", "Ты дал ответ на все вопросы!");
+			response.getWriter().write(gson.toJson(map));
+		}
 	}
+	/**
+	 * Used when this is the very first request.
+	 * Returns new unanswered dilemma depending on cookies.
+	 * @param response
+	 * @param answeredDilArray
+	 * @throws IOException
+	 */
+	
+	private void writeNotAnswered(HttpServletResponse response,  DBCollection coll) throws IOException {
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		
+		// Created map for mapping string to json strings("id" - for id, "dilemma - for dilemma JSON")
+		Map<String, String> map = new HashMap<String, String>();
+		Gson gson = new Gson();
+		// Get dilemma which was not yed answered.
+		BasicDBObject doc = DilemmaUtil.getNewDilemmaExcludingAnswered(coll);
+		System.out.println("Inside of writeNotAnswered(2 args) method!======");
+		System.out.println("Doc is: ." + doc + ".");
+		if(doc != null){
+		System.out.println("ANother dilemma got: " + doc);
+		String id1 = DilemmaUtil.getId(doc);
+		System.out.println(id1);
+		Cookie cookieFromWriteNotAnsweredMethod = new Cookie("answeredIdCookie_" + id1.hashCode(), id1);
+		map.put("id1", id1);
+		map.put("peopleGoodVote", doc.getInt("peopleGoodVote") + "");
+		map.put("peopleBadVote", doc.getInt("peopleBadVote") + "");
+		map.put("peopleYes", doc.getInt("peopleYes") + "");
+		map.put("peopleNo", doc.getInt("peopleNo") + "");
+		map.put("youGet", doc.getString("youGet"));
+		map.put("but", doc.getString("but"));
+		// Add cookie in order to prevent same dilemmas to be loaded.
+		response.addCookie(cookieFromWriteNotAnsweredMethod);
+		response.getWriter().write(gson.toJson(map));
+		} else {
+			map.put("id1", "Ты дал ответ на все вопросы!");
+			response.getWriter().write(gson.toJson(map));
+		}
+	}
+	
 }
