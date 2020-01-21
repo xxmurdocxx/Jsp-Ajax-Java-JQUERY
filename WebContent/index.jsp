@@ -18,7 +18,7 @@
 		<input type="submit"/>
 	</form>
 	<p id="displayName"/>
-	<p id="displayNameFinalFinal"/>
+	<p id="displayNameFinal"/>
 	<p class="small">Tutorial Resource: </p>
 	</body>	
 		

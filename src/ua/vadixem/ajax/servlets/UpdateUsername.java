@@ -66,12 +66,6 @@ public class UpdateUsername extends HttpServlet {
 			map.put("username", username);
 		}
 		map.put("isValid", isNotValid);
-		//Cambio AQ
-		write(response, map);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(new Gson().toJson(map));
-		//Cambio AQ
 	}
 
 
