@@ -48,8 +48,17 @@ public class UpdateUsername extends HttpServlet {
 		}
 		map.put("isValid", isValid);
 		write(response, map);
+		map.put("isNoValid", isValid);
 	}
 
+	
+	private void writeAquineche(HttpServletResponse response, Map<String, Object> map) throws IOException {
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(new Gson().toJson(map));
+	}
+	
+	
 	private void write(HttpServletResponse response, Map<String, Object> map) throws IOException {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
