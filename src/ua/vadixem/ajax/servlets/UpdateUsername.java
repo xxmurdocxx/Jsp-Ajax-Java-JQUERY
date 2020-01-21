@@ -64,6 +64,9 @@ public class UpdateUsername extends HttpServlet {
 		}
 		map.put("isValid", isValid);
 		write(response, map);
+		//Se tiene que agregar el Metodo Final
+		response.setContentType("application/json");
+		//Fin
 	}
 
 
