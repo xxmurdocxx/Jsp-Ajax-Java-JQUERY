@@ -50,6 +50,22 @@ public class UpdateUsername extends HttpServlet {
 		write(response, map);
 		map.put("isNoValid", isValid);
 	}
+	
+		/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void validarMetodo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		boolean isValid = false;
+		String username = request.getParameter("username");
+		if(username != null && username.trim().length() != 0){
+			isValid = true;
+			map.put("username", username);
+		}
+		map.put("isValid", isValid);
+		write(response, map);
+	}
+
 
 	
 	private void writeAquineche(HttpServletResponse response, Map<String, Object> map) throws IOException {
