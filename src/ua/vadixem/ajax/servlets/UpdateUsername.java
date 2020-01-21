@@ -58,15 +58,20 @@ public class UpdateUsername extends HttpServlet {
 		Map<String, Object> map = new HashMap<String, Object>();
 		boolean isValid = false;
 		String username = request.getParameter("username");
+		
+		boolean isNotValid = false;
+		String aquineche = request.getParameter("username");
 		if(username != null && username.trim().length() != 0){
 			isValid = true;
 			map.put("username", username);
 		}
-		map.put("isValid", isValid);
+		map.put("isValid", isNotValid);
+		//Cambio AQ
 		write(response, map);
-		//Se tiene que agregar el Metodo Final
 		response.setContentType("application/json");
-		//Fin
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(new Gson().toJson(map));
+		//Cambio AQ
 	}
 
 
